@@ -1,0 +1,18 @@
+#!/bin/bash
+# 
+# DNA resequencing pipeline in Xu Lab
+# Author: Qinhu Wang (wangqinhu@nwafu.edu.cn)
+# Copyright (c) Xu Lab, Northwest A&F University
+#
+
+if [ $# != 1 ] ; then
+	echo "Usage: $0 fastq_directory" 
+	echo " e.g.: $0 ~/data/example/rnaseq/fastq"
+	exit 1
+fi
+
+dir_name=`dirname $1`
+base_name=`basename $1`
+
+hits -p D -g ~/db/Fusarium_graminearum/FG.RR.32.genome.fa -a ~/db/Fusarium_graminearum/FG.RR.32.gtf -d $1 -o $dir_name/$base_name.outdir
+
