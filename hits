@@ -233,7 +233,7 @@ Usage:
     $appname <option>
 
     -p  pipeline for DNAseq[D] or RNAseq [R]
-    -d  directory that contains fastq file(s) 
+    -d  directory that contains fastq file(s)
     -g  reference genome
     -a  annotation file in GTF format
     -o  output directory
