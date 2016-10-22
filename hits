@@ -76,8 +76,8 @@ sub dnaseq {
 
 sub rnaseq {
 
-	check_app("hisat-build");
-	check_app("hisat");
+	check_app("hisat2-build");
+	check_app("hisat2");
 	check_app("samtools");
 	check_app("featureCounts");
 
@@ -96,23 +96,19 @@ sub rnaseq {
 	print STDERR "Runing RNAseq pipeline\n";
 	foreach my $fq (sort keys %{$fqs}) {
 		print STDERR "Mapping $fq ...\n";
-		my $map_cmd = 'hisat -x ' . $options{'g'} .
+		my $hisat2_options = "--rna-strandness RF --min-intronlen 20 --max-intronlen 4000 --no-unal --no-temp-splicesite " .
+		"--novel-splicesite-outfile $dir/bam/$fq.splicesite --novel-splicesite-infile $dir/bam/$fq.splicesite";
+		my $map_cmd = "hisat2 $hisat2_options -x " . $options{'g'} .
 			' -1 ' . $fqs->{$fq}->{'1'} .
-			' -2 ' . $fqs->{$fq}->{'2'} .
-			' -S ' . "$dir/sam/$fq.sam";
-		system($map_cmd);
-
-		print STDERR "Coverting $fq.sam to $fq.bam ...\n";
-		my $sam2bam_cmd = "samtools view -bS $dir/sam/$fq.sam > $dir/bam/$fq.bam";
-		system($sam2bam_cmd);
-
-		print STDERR "Sorting $fq.bam ...\n";
-		my $sortbam_cmd = "samtools sort $dir/bam/$fq.bam -o $dir/bam/$fq.sorted.bam";
-		system($sortbam_cmd);
+			' -2 ' . $fqs->{$fq}->{'2'};
+		my $sam2bam_cmd = "samtools view -bS -";
+		my $sortbam_cmd = "samtools sort -o $dir/bam/$fq.bam -";
+		system("$map_cmd | $sam2bam_cmd | $sortbam_cmd");
+		system("samtools index $dir/bam/$fq.bam");
 	}
 
 	print STDERR "Counting features ...\n";
-	my $featureCounts_cmd = "featureCounts -p -M -O -t exon -g gene_id -a $options{'a'} -o $dir/featureCounts/rnaseq.tsv $dir/bam/*.sorted.bam";
+	my $featureCounts_cmd = "featureCounts -p -s 2 -t exon -g gene_id -a $options{'a'} -o $dir/featureCounts/rnaseq.tsv $dir/bam/*.bam";
 	system($featureCounts_cmd);
 
 	print STDERR "Done\n\n";
