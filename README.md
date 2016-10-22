@@ -19,9 +19,10 @@ Usage:
     -h  help
     -v  version
 
-Example:
+Examples:
 
     hits -p D -d fastq_dir -g genome.fa -o output_dir
+    hits -p R -d fastq_dir -g genome.fa -a gene.gtf -o output_dir
 
 Reporting Bugs:
 

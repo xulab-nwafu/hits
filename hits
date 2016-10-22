@@ -272,9 +272,10 @@ Usage:
     -h  help
     -v  version
 
-Example:
+Examples:
 
     $appname -p D -d fastq_dir -g genome.fa -o output_dir
+    $appname -p R -d fastq_dir -g genome.fa -a gene.gtf -o output_dir
 
 Reporting Bugs:
 
