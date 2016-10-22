@@ -110,10 +110,31 @@ sub rnaseq {
 	print STDERR "Counting features ...\n";
 	my $featureCounts_cmd = "featureCounts -p -s 2 -t exon -g gene_id -a $options{'a'} -o $dir/featureCounts/rnaseq.tsv $dir/bam/*.bam";
 	system($featureCounts_cmd);
+	format_featurecount_table($dir);
 
 	print STDERR "Done\n\n";
 
 	return 1;
+
+}
+
+sub format_featurecount_table {
+
+	my $dir = shift;
+	open (TSV, "$dir/featureCounts/rnaseq.tsv") or die "Cannot open $dir/featureCounts/rnaseq.tsv: $!\n";
+	open (XLS, ">$dir/featureCounts/rnaseq.xls") or die "Cannot open $dir/featureCounts/rnaseq.xls: $!\n";
+	while (my $line = <TSV>) {
+		chomp $line;
+		next if ($line =~ /^#/);
+		if ($line =~ /^Geneid/) {
+			$line =~ s/$dir\/bam\///g;
+			$line =~ s/.bam//g;
+		}
+		my @w = split /\t/, $line, 7;
+		print XLS "$w[0]\t$w[6]\n";
+	}
+	close TSV;
+	close XLS;
 
 }
 
