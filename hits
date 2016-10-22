@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.1.0';
+my $version = '0.1.1';
 my %options = ();
 
 init();
@@ -52,24 +52,18 @@ sub dnaseq {
 		print STDERR "Mapping $fq ...\n";
 		my $map_cmd = 'bowtie2 -x ' . $options{'g'} .
 			' -1 ' . $fqs->{$fq}->{'1'} .
-			' -2 ' . $fqs->{$fq}->{'2'} .
-			' -S ' . "$dir/sam/$fq.sam";
-		system($map_cmd);
-
-		print STDERR "Coverting $fq.sam to $fq.bam ...\n";
-		my $sam2bam_cmd = "samtools view -bS $dir/sam/$fq.sam > $dir/bam/$fq.bam";
-		system($sam2bam_cmd);
-
-		print STDERR "Sorting $fq.bam ...\n";
-		my $sortbam_cmd = "samtools sort $dir/bam/$fq.bam -o $dir/bam/$fq.sorted.bam";
-		system($sortbam_cmd);
+			' -2 ' . $fqs->{$fq}->{'2'};
+		my $sam2bam_cmd = "samtools view -bS -";
+		my $sortbam_cmd = "samtools sort -o $dir/bam/$fq.bam -";
+		system("$map_cmd | $sam2bam_cmd | $sortbam_cmd");
+		system("samtools index $dir/bam/$fq.bam");
 
 		print STDERR "Calling variants ...\n";
-		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.sorted.bam | bcftools call -cv -O v - > $dir/vcf/$fq.vcf";
+		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call -cv -O v - > $dir/vcf/$fq.vcf";
 		system($callvar_cmd);
-		my $callsnp_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.sorted.bam | bcftools call -cv -V indels -O v - > $dir/vcf/$fq.snps.vcf";
+		my $callsnp_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call -cv -V indels -O v - > $dir/vcf/$fq.snps.vcf";
 		system($callsnp_cmd);
-		my $callindel_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.sorted.bam | bcftools call -cv -V snps -O v - > $dir/vcf/$fq.indels.vcf";
+		my $callindel_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call -cv -V snps -O v - > $dir/vcf/$fq.indels.vcf";
 		system($callindel_cmd);
 	}
 
@@ -165,12 +159,10 @@ sub create_directory {
 	$dir =~ s/\/$//;
 	
 	if (uc($options{'p'}) eq 'D') {
-		system("mkdir -p $dir/sam");
 		system("mkdir -p $dir/bam");
 		system("mkdir -p $dir/vcf");
 	}
 	if (uc($options{'p'}) eq 'R') {
-		system("mkdir -p $dir/sam");
 		system("mkdir -p $dir/bam");
 		system("mkdir -p $dir/featureCounts");
 	}

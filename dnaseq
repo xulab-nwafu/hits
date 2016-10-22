@@ -14,6 +14,7 @@ fi
 dir_name=`dirname $1`
 base_name=`basename $1`
 
-hits -p D -g ~/db/Fusarium_graminearum/current/bowtie2/FG.RR.*.genome.fa -d $1 -o $dir_name/$base_name.outdir
-
+touch dnaseq_log.txt
+hits -p D -g ~/db/Fusarium_graminearum/current/bowtie2/FG.RR.*.genome.fa -d $1 -o $dir_name/$base_name.outdir 1>dnaseq_log.txt 2>&1
+mv dnaseq_log.txt $dir_name/$base_name.outdir/
 echo "Outputs are in $dir_name/$base_name.outdir"
