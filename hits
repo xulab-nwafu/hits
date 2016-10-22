@@ -20,10 +20,9 @@ sub hits {
 
 	if (uc($options{'p'}) eq 'D') {
 		dnaseq();
-	} elsif (uc($options{'p'}) eq 'R') {
+	}
+	if (uc($options{'p'}) eq 'R') {
 		rnaseq();
-	} else {
-		die "Aborted: Unknown pipeline selected!\n";
 	}
 
 }
@@ -212,6 +211,30 @@ sub init {
 	unless ( defined($options{'p'}) ) {
 		print STDERR "Aborted: No pipeline specified!\n";
 		usage();
+	}
+	unless ( (uc($options{'p'}) eq 'D') or (uc($options{'p'}) eq 'R') ) {
+		print STDERR "Aborted: Unknown pipeline selected!\n";
+		usage();
+	}
+
+	unless ( defined($options{'g'}) ) {
+		print STDERR "Aborted: No reference genome specified!\n";
+		usage();
+	}
+	unless ( defined($options{'d'}) ) {
+		print STDERR "Aborted: No fastq directory specified!\n";
+		usage();
+	}
+	unless ( defined($options{'o'}) ) {
+		print STDERR "Aborted: No output directory specified!\n";
+		usage();
+	}
+
+	if (uc($options{'p'}) eq 'R') {
+		unless ( defined($options{'a'}) ) {
+			print STDERR "Aborted: No annotation file specified!\n";
+			usage();
+		}
 	}
 
 }
