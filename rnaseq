@@ -14,5 +14,5 @@ fi
 dir_name=`dirname $1`
 base_name=`basename $1`
 
-hits -p D -g ~/db/Fusarium_graminearum/FG.RR.32.genome.fa -a ~/db/Fusarium_graminearum/FG.RR.32.gtf -d $1 -o $dir_name/$base_name.outdir
+hits -p R -g ~/db/Fusarium_graminearum/FG.RR.32.genome.fa -a ~/db/Fusarium_graminearum/FG.RR.32.gtf -d $1 -o $dir_name/$base_name.outdir
 

@@ -7,7 +7,7 @@
 
 if [ $# != 1 ] ; then
 	echo "Usage: $0 fastq_directory" 
-	echo " e.g.: $0 ~/data/example/20161021/fastq"
+	echo " e.g.: $0 ~/data/example/dnaseq/fastq"
 	exit 1
 fi
 
