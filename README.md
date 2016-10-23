@@ -2,6 +2,8 @@ About
 -----
 The `hits` is an integrated pipeline for DNA resequencing and RNAseq analyses in Xu Lab. It is designed for molecuar biologist with limited bioinformatics skills. Exports can use it but please note that some of the parameters were build-in, your are awared.
 
+N.B.: the scripts `dnaseq` and `rnaseq` are work with the hardware and software settings in Xu Lab,  can be used with minor modification.
+
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
