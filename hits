@@ -40,11 +40,15 @@ sub dnaseq {
 	print STDERR "Total $num pairs of fastq file(s) found.\n";
 
 	if ($num < 1) {
-		die  "Aborted: No fastq files found!\n";
+		die "Aborted: No fastq files found!\n";
 	}
 
 	print STDERR "Creating output directory: $options{'o'}\n";
 	my $dir = create_directory($options{'o'});
+
+	unless (-e $options{'g'} . ".1.bt2") {
+		build_db('bowtie2-build', $options{'g'}, $dir);
+	}
 
 	print STDERR "Runing DNAseq pipeline\n";
 	foreach my $fq (sort keys %{$fqs}) {
@@ -92,6 +96,10 @@ sub rnaseq {
 	print STDERR "Creating output directory: $options{'o'}\n";
 	my $dir = create_directory($options{'o'});
 
+	unless (-e $options{'g'} . ".1.ht2") {
+		build_db('hisat2-build', $options{'g'}, $dir);
+	}
+
 	print STDERR "Runing RNAseq pipeline\n";
 	foreach my $fq (sort keys %{$fqs}) {
 		print STDERR "Mapping $fq ...\n";
@@ -114,6 +122,18 @@ sub rnaseq {
 	print STDERR "Done\n\n";
 
 	return 1;
+
+}
+
+sub build_db {
+
+	my ($app, $file, $dir) = @_;
+	unless (-e $file) {
+		die "Aborted: $file not found!\n";
+	}
+	system("cp $file $dir/refseq.fa");
+	system("$app $file $dir/refseq.fa");
+	$options{'g'} = "$dir/refseq.fa";
 
 }
 
