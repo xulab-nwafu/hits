@@ -16,6 +16,11 @@ my %options = ();
 init();
 hits();
 
+exit 1;
+
+# Subroutines
+
+# Switch for HIgh Throughput Sequencing analysis pipelines
 sub hits {
 
 	if (uc($options{'p'}) eq 'D') {
@@ -25,8 +30,11 @@ sub hits {
 		rnaseq();
 	}
 
+	return;
+
 }
 
+# DNAseq pipeline
 sub dnaseq {
 
 	check_app("bowtie2-build");
@@ -72,11 +80,11 @@ sub dnaseq {
 
 	print STDERR "Done\n\n";
 
-	return 1;
+	return;
 
 }
 
-
+# RNAseq pipeline
 sub rnaseq {
 
 	check_app("hisat2-build");
@@ -121,10 +129,11 @@ sub rnaseq {
 
 	print STDERR "Done\n\n";
 
-	return 1;
+	return;
 
 }
 
+# If no bowtie2/hisat2 db found, build it.
 sub build_db {
 
 	my ($app, $file, $dir) = @_;
@@ -133,10 +142,14 @@ sub build_db {
 	}
 	system("cp $file $dir/refseq.fa");
 	system("$app $file $dir/refseq.fa");
+	# update option -g to the new db index
 	$options{'g'} = "$dir/refseq.fa";
+
+	return;
 
 }
 
+# Generate a breif gene expression summary table accroding featureCounts table
 sub format_featurecount_table {
 
 	my $dir = shift;
@@ -155,8 +168,11 @@ sub format_featurecount_table {
 	close TSV;
 	close XLS;
 
+	return;
+
 }
 
+# Find fastq files in the directory specified
 sub find_fastq {
 
 	my $dir = shift;
@@ -188,6 +204,7 @@ sub find_fastq {
 
 }
 
+# Create the directoies that required in the pipelines
 sub create_directory {
 
 	my $dir = shift;
@@ -207,6 +224,7 @@ sub create_directory {
 
 }
 
+# Handling the arguments
 sub init {
 
 	# Check the number of arguments
@@ -237,6 +255,7 @@ sub init {
 		usage();
 	}
 
+	# Check options that required in all the pipelines
 	unless ( defined($options{'g'}) ) {
 		print STDERR "Aborted: No reference genome specified!\n";
 		usage();
@@ -250,12 +269,14 @@ sub init {
 		usage();
 	}
 
+	# In DNAseq, ignore option -a
 	if (uc($options{'p'}) eq 'D') {
 		if ( defined($options{'a'}) ) {
 			print STDERR "Warning: unused option \"-a\" was set as \"$options{'a'}\", ignored.\n";
 		}
 	}
 
+	# In RNAseq, must specify option -a
 	if (uc($options{'p'}) eq 'R') {
 		unless ( defined($options{'a'}) ) {
 			print STDERR "Aborted: No annotation file specified!\n";
@@ -263,8 +284,11 @@ sub init {
 		}
 	}
 
+	return;
+
 }
 
+# Detect if application was installed
 sub check_app {
 
 	my $app = shift;
@@ -275,11 +299,12 @@ sub check_app {
 	if (!defined($w[-1]) or $w[-1] ne "$app") {
 		die "Aborted: $app is not found!\n";
 	} else {
-		return 1;
+		return;
 	}
 
 }
 
+# Usage
 sub usage {
 
 	print <<USAGE;
@@ -313,6 +338,7 @@ USAGE
 
 }
 
+# Version
 sub version {
 
 	print $appname . ' ' . $version, "\n";
