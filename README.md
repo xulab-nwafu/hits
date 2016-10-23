@@ -7,14 +7,14 @@ N.B.: the scripts `dnaseq` and `rnaseq` are work with the hardware and software 
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
-hits 0.1.1
+hits 0.1.2
 
 Usage:
 
     hits <option>
 
-    -p  pipeline for DNAseq[D] or RNAseq [R]
-    -d  directory that contains fastq file(s)
+    -p  pipeline for DNAseq [D] or RNAseq [R] analysis
+    -d  directory that containing FASTQ file(s), .fq/.fastq
     -g  reference genome
     -a  annotation file in GTF format [work with -p R]
     -o  output directory
@@ -29,7 +29,6 @@ Examples:
 Reporting Bugs:
 
     Bug reports can be submitted via the web:
-
     https://github.com/xulab-nwafu/hits/issues
 ```
 

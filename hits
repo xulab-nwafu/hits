@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.1.1';
+my $version = '0.1.2';
 my %options = ();
 
 init();
@@ -290,8 +290,8 @@ Usage:
 
     $appname <option>
 
-    -p  pipeline for DNAseq[D] or RNAseq [R]
-    -d  directory that contains fastq file(s)
+    -p  pipeline for DNAseq [D] or RNAseq [R] analysis
+    -d  directory that containing FASTQ file(s), .fq/.fastq
     -g  reference genome
     -a  annotation file in GTF format [work with -p R]
     -o  output directory
@@ -306,7 +306,6 @@ Examples:
 Reporting Bugs:
 
     Bug reports can be submitted via the web:
-
     https://github.com/xulab-nwafu/hits/issues
 
 USAGE
