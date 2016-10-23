@@ -230,6 +230,12 @@ sub init {
 		usage();
 	}
 
+	if (uc($options{'p'}) eq 'D') {
+		if ( defined($options{'a'}) ) {
+			print STDERR "Warning: unused option \"-a\" was set as \"$options{'a'}\", ignored.\n";
+		}
+	}
+
 	if (uc($options{'p'}) eq 'R') {
 		unless ( defined($options{'a'}) ) {
 			print STDERR "Aborted: No annotation file specified!\n";
@@ -267,7 +273,7 @@ Usage:
     -p  pipeline for DNAseq[D] or RNAseq [R]
     -d  directory that contains fastq file(s)
     -g  reference genome
-    -a  annotation file in GTF format
+    -a  annotation file in GTF format [work with -p R]
     -o  output directory
     -h  help
     -v  version

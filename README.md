@@ -14,7 +14,7 @@ Usage:
     -p  pipeline for DNAseq[D] or RNAseq [R]
     -d  directory that contains fastq file(s)
     -g  reference genome
-    -a  annotation file in GTF format
+    -a  annotation file in GTF format [work with -p R]
     -o  output directory
     -h  help
     -v  version
