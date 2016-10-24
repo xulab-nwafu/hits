@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.2.0';
+my $version = '0.2.1';
 my %options = ();
 
 init();
@@ -161,7 +161,7 @@ sub format_featurecount_table {
 			$line =~ s/.bam//g;
 		}
 		my @w = split /\t/, $line, 7;
-		print XLS "$w[0]\t$w[6]\n";
+		print XLS "$w[0]\t$w[5]\t$w[6]\n";
 	}
 	close TSV;
 	close XLS;
