@@ -10,13 +10,11 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.1.2';
+my $version = '0.2.0';
 my %options = ();
 
 init();
 hits();
-
-exit 1;
 
 # Subroutines
 
@@ -30,7 +28,7 @@ sub hits {
 		rnaseq();
 	}
 
-	return;
+	exit;
 
 }
 
@@ -70,11 +68,11 @@ sub dnaseq {
 		system("samtools index $dir/bam/$fq.bam");
 
 		print STDERR "Calling variants ...\n";
-		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call -cv -O v - > $dir/vcf/$fq.vcf";
+		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy 1 -cv -O v - > $dir/vcf/$fq.vcf";
 		system($callvar_cmd);
-		my $callsnp_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call -cv -V indels -O v - > $dir/vcf/$fq.snps.vcf";
+		my $callsnp_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy 1 -cv -V indels -O v - > $dir/vcf/$fq.snps.vcf";
 		system($callsnp_cmd);
-		my $callindel_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call -cv -V snps -O v - > $dir/vcf/$fq.indels.vcf";
+		my $callindel_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy 1 -cv -V snps -O v - > $dir/vcf/$fq.indels.vcf";
 		system($callindel_cmd);
 	}
 

@@ -7,7 +7,7 @@ N.B.: the scripts `dnaseq` and `rnaseq` are work with the hardware and software 
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
-hits 0.1.2
+hits 0.2.0
 
 Usage:
 
