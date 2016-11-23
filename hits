@@ -314,7 +314,7 @@ Usage:
     $appname <option>
 
     -p  pipeline for DNAseq [D] or RNAseq [R] analysis
-    -d  directory that containing FASTQ file(s), .fq/.fastq
+    -d  directory that containing FASTQ file(s), .fq/.fastq(.gz)
     -g  reference genome
     -a  annotation file in GTF format [work with -p R]
     -o  output directory
