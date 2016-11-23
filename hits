@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.2.1';
+my $version = '0.2.2';
 my %options = ();
 
 init();
@@ -188,7 +188,7 @@ sub find_fastq {
 		#              sep: $2, '+'
 		#           suffix: $3, '====='
 		#             -----++++++++++++  =========================
-		if ($file =~ /(\S+)([\_|\-|\.])1.(fq.gz|fastq.gz|fq|fastq)$/) {
+		if ($file =~ /(\S+)([\_|\-|\.])1.(clean.fq.gz|clean.fastq.gz|clean.fq|clean.fastq|fq.gz|fastq.gz|fq|fastq)$/) {
 			next unless (-e "$dir/$1" . $2 . "2." . $3);
 			$fastq{$1}{'1'} = "$dir/$1" . $2 . "1." . $3;
 			$fastq{$1}{'2'} = "$dir/$1" . $2 . "2." . $3;
