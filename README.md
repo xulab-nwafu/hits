@@ -7,7 +7,7 @@ N.B.: the scripts `dnaseq` and `rnaseq` are work with the hardware and software 
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
-hits 0.2.3
+hits 0.2.4
 
 Usage:
 
@@ -18,13 +18,14 @@ Usage:
     -g  reference genome
     -a  annotation file in GTF format [work with -p R]
     -o  output directory
+    -t  number of alignment threads
     -h  help
     -v  version
 
 Examples:
 
-    hits -p D -d fastq_dir -g genome.fa -o output_dir
-    hits -p R -d fastq_dir -g genome.fa -a gene.gtf -o output_dir
+    hits -p D -d fastq_dir -g genome.fa -o output_dir -t 8
+    hits -p R -d fastq_dir -g genome.fa -a gene.gtf -o output_dir -t 8
 
 Reporting Bugs:
 

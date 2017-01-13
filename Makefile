@@ -1,8 +1,8 @@
 prefix=/home/xulab/sf/hits/current
 
 all:
-	mkdir bin
-	mkdir doc
+	mkdir -p bin
+	mkdir -p doc
 	cp hits dnaseq rnaseq bin/
 	cp README.md doc/
 	chmod 755 bin/*

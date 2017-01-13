@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.2.3';
+my $version = '0.2.4';
 my %options = ();
 
 init();
@@ -59,7 +59,7 @@ sub dnaseq {
 	print STDERR "Runing DNAseq pipeline\n";
 	foreach my $fq (sort keys %{$fqs}) {
 		print STDERR "Mapping $fq ...\n";
-		my $map_cmd = 'bowtie2 -x ' . $options{'g'} .
+		my $map_cmd = "bowtie2 -p $options{'t'} -x " . $options{'g'} .
 			' -1 ' . $fqs->{$fq}->{'1'} .
 			' -2 ' . $fqs->{$fq}->{'2'};
 		my $sam2bam_cmd = "samtools view -bS -";
@@ -111,7 +111,7 @@ sub rnaseq {
 		print STDERR "Mapping $fq ...\n";
 		my $hisat2_options = "--rna-strandness RF --min-intronlen 20 --max-intronlen 4000 --no-unal --no-temp-splicesite " .
 		"--novel-splicesite-outfile $dir/bam/$fq.splicesite --novel-splicesite-infile $dir/bam/$fq.splicesite";
-		my $map_cmd = "hisat2 $hisat2_options -x " . $options{'g'} .
+		my $map_cmd = "hisat2 -p $options{'t'} $hisat2_options -x " . $options{'g'} .
 			' -1 ' . $fqs->{$fq}->{'1'} .
 			' -2 ' . $fqs->{$fq}->{'2'};
 		my $sam2bam_cmd = "samtools view -bS -";
@@ -231,7 +231,7 @@ sub init {
 	}
 
 	# Options
-	getopts("p:d:g:a:o:hv", \%options) or die "$!\n" . usage();
+	getopts("p:d:g:a:o:t:hv", \%options) or die "$!\n" . usage();
 
 	# Check help
 	if ($options{'h'}) {
@@ -318,13 +318,14 @@ Usage:
     -g  reference genome
     -a  annotation file in GTF format [work with -p R]
     -o  output directory
+    -t  number of alignment threads
     -h  help
     -v  version
 
 Examples:
 
-    $appname -p D -d fastq_dir -g genome.fa -o output_dir
-    $appname -p R -d fastq_dir -g genome.fa -a gene.gtf -o output_dir
+    $appname -p D -d fastq_dir -g genome.fa -o output_dir -t 8
+    $appname -p R -d fastq_dir -g genome.fa -a gene.gtf -o output_dir -t 8
 
 Reporting Bugs:
 
