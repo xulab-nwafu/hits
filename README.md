@@ -7,7 +7,7 @@ N.B.: the scripts `dnaseq` and `rnaseq` are work with the hardware and software 
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
-hits 0.2.4
+hits 0.2.5
 
 Usage:
 
@@ -35,16 +35,28 @@ Reporting Bugs:
 
 DNA resequencing pipeline
 -------------------------
+- For mapping and variants calling in DNA resequencing:
 ```
 Usage: dnaseq fastq_directory
  e.g.: dnaseq ~/data/example/dnaseq/fastq
 ```
+- To compare the differences between two genomes, use `vcfcmp` in https://github.com/xulab-nwafu/filter_vcf
+```
+Usage: vcfcmp ref.vcf var.vcf
+ e.g.: vcfcmp WT.vcf MU.vcf
+```
 
 RNAseq pipeline
 ---------------
+- For mapping and counting reads of each gene in RNAseq:
 ```
- Usage: rnaseq fastq_directory
-  e.g.: rnaseq ~/data/example/rnaseq/fastq
+Usage: rnaseq fastq_directory
+ e.g.: rnaseq ~/data/example/rnaseq/fastq
+```
+- To compare the differences between two RNA samples, use `rnadiff` in https://github.com/xulab-nwafu/rnadiff
+```
+Usage: rnadiff rnaseq.conf
+ e.g.: rnadiff targets.txt
 ```
 
 Author
