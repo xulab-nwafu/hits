@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.2.4';
+my $version = '0.2.5';
 my %options = ();
 
 init();
@@ -121,7 +121,7 @@ sub rnaseq {
 	}
 
 	print STDERR "Counting features ...\n";
-	my $featureCounts_cmd = "featureCounts -p -s 2 -t exon -g gene_id -a $options{'a'} -o $dir/featureCounts/rnaseq.tsv $dir/bam/*.bam";
+	my $featureCounts_cmd = "featureCounts -p -s 2 -t exon -g gene_id -a $options{'a'} -o $dir/featureCounts/rnaseq.raw.tsv $dir/bam/*.bam";
 	system($featureCounts_cmd);
 	format_featurecount_table($dir);
 
@@ -151,9 +151,9 @@ sub build_db {
 sub format_featurecount_table {
 
 	my $dir = shift;
-	open (TSV, "$dir/featureCounts/rnaseq.tsv") or die "Cannot open $dir/featureCounts/rnaseq.tsv: $!\n";
-	open (XLS, ">$dir/featureCounts/rnaseq.xls") or die "Cannot open $dir/featureCounts/rnaseq.xls: $!\n";
-	while (my $line = <TSV>) {
+	open (RAW, "$dir/featureCounts/rnaseq.raw.tsv") or die "Cannot open $dir/featureCounts/rnaseq.raw.tsv: $!\n";
+	open (TSV, ">$dir/featureCounts/rnaseq.tsv") or die "Cannot open $dir/featureCounts/rnaseq.tsv: $!\n";
+	while (my $line = <RAW>) {
 		chomp $line;
 		next if ($line =~ /^#/);
 		if ($line =~ /^Geneid/) {
@@ -161,10 +161,10 @@ sub format_featurecount_table {
 			$line =~ s/.bam//g;
 		}
 		my @w = split /\t/, $line, 7;
-		print XLS "$w[0]\t$w[5]\t$w[6]\n";
+		print TSV "$w[0]\t$w[6]\n";
 	}
+	close RAW;
 	close TSV;
-	close XLS;
 
 	return;
 
