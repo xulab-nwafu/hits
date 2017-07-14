@@ -55,8 +55,8 @@ Usage: rnaseq fastq_directory
 ```
 - To compare the differences between two RNA samples, use `rnadiff` in https://github.com/xulab-nwafu/rnadiff
 ```
-Usage: rnadiff rnaseq.conf
- e.g.: rnadiff targets.txt
+Usage: rnadiff rnaseq.conf rnaseq.tsv control_tag case_tag
+ e.g.: rnadiff demo/rnaseq.conf demo/rnaseq.tsv wt mu
 ```
 
 Author
