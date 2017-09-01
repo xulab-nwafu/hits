@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.2.5';
+my $version = '0.3.0';
 my %options = ();
 
 init();

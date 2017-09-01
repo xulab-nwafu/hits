@@ -7,7 +7,7 @@ N.B.: the scripts `dnaseq` and `rnaseq` are work with the hardware and software 
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
-hits 0.2.5
+hits 0.3.0
 
 Usage:
 
@@ -59,13 +59,18 @@ Usage: rnadiff rnaseq.conf rnaseq.tsv control_tag case_tag
  e.g.: rnadiff demo/rnaseq.conf demo/rnaseq.tsv wt mu
 ```
 
+Sclerotinia sclerotiorum
+------------------------
+- For _Sclerotinia sclerotiorum_, use dnaseq.ss, rnaseq.ss, and vcfcmp.ss, please.
+- rnadiff have no genome file specified, can be used directly.
+
 Author
 ------
 Qinhu Wang (wangqinhu@nwafu.edu.cn)
 
 Copyright
 ---------
-2016 - Xu Lab, Northwest A&F University
+2016-2017 (c) Xu Lab, Northwest A&F University
 
 License
 -------
