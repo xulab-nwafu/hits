@@ -26,5 +26,5 @@ fi
 dir_name=`dirname $1`
 base_name=`basename $1`
 
-nohup hits -p R -g ~/db/Sclerotinia_sclerotiorum/current/hisat2/Sclerotinia_sclerotiorum.genome.fa -a ~/db/Sclerotinia_sclerotiorum/current/Sclerotinia_sclerotiorum.gene.gtf -d $1 -o $dir_name/$base_name.outdir -t 8 1>$dir_name/$base_name.rnaseq_log.txt 2>&1 &
+nohup hits -p R -g ~/db/Sclerotinia_sclerotiorum/current/hisat2/Sclerotinia_sclerotiorum.genome.fa -a ~/db/Sclerotinia_sclerotiorum/current/Sclerotinia_sclerotiorum.gene.gtf -s 1 -d $1 -o $dir_name/$base_name.outdir -t 8 1>$dir_name/$base_name.rnaseq_log.txt 2>&1 &
 echo "Job submitted, outputs will be in $dir_name/$base_name.outdir"

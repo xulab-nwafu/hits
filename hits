@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.3.0';
+my $version = '0.4.0';
 my %options = ();
 
 init();
@@ -107,9 +107,13 @@ sub rnaseq {
 	}
 
 	print STDERR "Runing RNAseq pipeline\n";
+	my $rnaseq_strand_option = '';
+	if ($options{'s'} == 1) {
+		$rnaseq_strand_option = '--rna-strandness ';
+	}
 	foreach my $fq (sort keys %{$fqs}) {
 		print STDERR "Mapping $fq ...\n";
-		my $hisat2_options = "--rna-strandness RF --min-intronlen 20 --max-intronlen 4000 --no-unal --no-temp-splicesite " .
+		my $hisat2_options = $rnaseq_strand_option .  "--min-intronlen 20 --max-intronlen 4000 --no-unal --no-temp-splicesite " .
 		"--novel-splicesite-outfile $dir/bam/$fq.splicesite --novel-splicesite-infile $dir/bam/$fq.splicesite";
 		my $map_cmd = "hisat2 -p $options{'t'} $hisat2_options -x " . $options{'g'} .
 			' -1 ' . $fqs->{$fq}->{'1'} .
@@ -231,7 +235,7 @@ sub init {
 	}
 
 	# Options
-	getopts("p:d:g:a:o:t:hv", \%options) or die "$!\n" . usage();
+	getopts("p:d:g:a:s:o:t:hv", \%options) or die "$!\n" . usage();
 
 	# Check help
 	if ($options{'h'}) {
@@ -274,13 +278,26 @@ sub init {
 		}
 	}
 
-	# In RNAseq, must specify option -a
+	# Check important RNA-seq options
 	if (uc($options{'p'}) eq 'R') {
+		# In RNAseq, must specify option -a
 		unless ( defined($options{'a'}) ) {
 			print STDERR "Aborted: No annotation file specified!\n";
 			usage();
 		}
+		# Defalut: stranded RNA-seq
+		unless (defined($options{'s'})) {
+			print STDERR "No strand information of RNA-seq specified, set to defualt (1-stranded)\n";
+			$options{'s'} = 1;
+		} else {
+			unless ($options{'s'} == 1 or $options{'s'} == 0) {
+				print STDERR "Aborted: Unknown strand information of RNA-seq specified!\n";
+				print STDERR "required: 1 or 0, specified as $options{'a'}\n";
+				usage();
+			}
+		}
 	}
+
 
 	return;
 
@@ -317,6 +334,9 @@ Usage:
     -d  directory that containing FASTQ file(s), .fq/.fastq(.gz)
     -g  reference genome
     -a  annotation file in GTF format [work with -p R]
+    -s  strand-specific information [work with -p R]
+        1 - stranded [default]
+        0 - unstranded
     -o  output directory
     -t  number of alignment threads
     -h  help
@@ -325,7 +345,7 @@ Usage:
 Examples:
 
     $appname -p D -d fastq_dir -g genome.fa -o output_dir -t 8
-    $appname -p R -d fastq_dir -g genome.fa -a gene.gtf -o output_dir -t 8
+    $appname -p R -d fastq_dir -g genome.fa -a gene.gtf -s 1 -o output_dir -t 8
 
 Reporting Bugs:
 
