@@ -2,8 +2,6 @@ About
 -----
 The `hits` is an integrated pipeline for DNA resequencing and RNAseq analyses in Xu Lab. It is designed for molecuar biologist with limited bioinformatics skills. Experts can use it but please note that some of the parameters were build-in, your are awared.
 
-N.B.: the scripts `dnaseq` and `rnaseq` are work with the hardware and software settings in Xu Lab,  can be used with minor modification.
-
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
@@ -73,7 +71,7 @@ Please note that `dnaseq`, `vcfcmp`, `rnaseq`, and `goea` can only used for _Fus
 
 Sclerotinia sclerotiorum
 ------------------------
-- For _Sclerotinia sclerotiorum_, use dnaseq.ss, rnaseq.ss, and vcfcmp.ss, please.
+- For _Sclerotinia sclerotiorum_, use `dnaseq.ss`, `vcfcmp.ss`, `rnaseq.ss`, and `goea.ss`, please.
 - rnadiff have no genome file specified, can be used directly.
 
 Author
