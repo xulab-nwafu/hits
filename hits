@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.4.0';
+my $version = '0.4.1';
 my %options = ();
 
 init();
@@ -109,7 +109,7 @@ sub rnaseq {
 	print STDERR "Runing RNAseq pipeline\n";
 	my $rnaseq_strand_option = '';
 	if ($options{'s'} == 1) {
-		$rnaseq_strand_option = '--rna-strandness ';
+		$rnaseq_strand_option = '--rna-strandness RF ';
 	}
 	foreach my $fq (sort keys %{$fqs}) {
 		print STDERR "Mapping $fq ...\n";
