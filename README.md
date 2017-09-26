@@ -38,7 +38,7 @@ Reporting Bugs:
 
 DNA resequencing pipeline
 -------------------------
-- For mapping and variants calling in DNA resequencing:
+- For mapping and variants calling in DNA resequencing, use `dnaseq`
 ```
 Usage: dnaseq fastq_directory
  e.g.: dnaseq ~/data/example/dnaseq/fastq
@@ -51,7 +51,7 @@ Usage: vcfcmp ref.vcf var.vcf
 
 RNAseq pipeline
 ---------------
-- For mapping and counting reads of each gene in RNAseq:
+- For mapping and counting reads of each gene in RNAseq, use `rnaseq`
 ```
 Usage: rnaseq fastq_directory
  e.g.: rnaseq ~/data/example/rnaseq/fastq
@@ -61,6 +61,15 @@ Usage: rnaseq fastq_directory
 Usage: rnadiff rnaseq.conf rnaseq.tsv control_tag case_tag
  e.g.: rnadiff demo/rnaseq.conf demo/rnaseq.tsv wt mu
 ```
+- To perform Gene Ontology enrichment analysis, use `goea` (will make public soon)
+```
+Usage: /home/xulab/bin/goea gene_id.txt
+ e.g.: /home/xulab/bin/goea de.up.txt
+```
+
+Note
+-----
+Please note that `dnaseq`, `vcfcmp`, `rnaseq`, and `goea` can only used for _Fusuarium graminearum_ directly.  Other species need to change a bit of source codes.  `rnadiff` could be applied for any species, if you like.
 
 Sclerotinia sclerotiorum
 ------------------------
