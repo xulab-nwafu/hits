@@ -69,6 +69,20 @@ Note
 -----
 Please note that `dnaseq`, `vcfcmp`, `rnaseq`, and `goea` can only used for _Fusuarium graminearum_ directly.  Other species need to change a bit of source codes.  `rnadiff` could be applied for any species, if you like.
 
+Dependence
+----------
+- bowtie2
+- hisat2
+- samtools
+- bcftools
+- subread
+- snpEff
+- ontologizer
+- graphviz
+- R
+- filter_vcf
+- rnadiff
+
 Sclerotinia sclerotiorum
 ------------------------
 - For _Sclerotinia sclerotiorum_, use `dnaseq.ss`, `vcfcmp.ss`, `rnaseq.ss`, and `goea.ss`, please.
