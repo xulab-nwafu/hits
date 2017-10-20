@@ -41,7 +41,7 @@ DNA resequencing pipeline
 Usage: dnaseq fastq_directory
  e.g.: dnaseq ~/data/example/dnaseq/fastq
 ```
-- To compare the differences between two genomes, use `vcfcmp` in https://github.com/xulab-nwafu/filter_vcf
+- To compare the differences between reference genome and variant genome(s) in VCF format, use `vcfcmp` in https://github.com/xulab-nwafu/filter_vcf
 ```
 Usage: vcfcmp ref.vcf var1.vcf var2.vcf ...
  e.g.: vcfcmp WT.vcf MU.vcf
