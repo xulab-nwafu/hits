@@ -43,7 +43,7 @@ Usage: dnaseq fastq_directory
 ```
 - To compare the differences between two genomes, use `vcfcmp` in https://github.com/xulab-nwafu/filter_vcf
 ```
-Usage: vcfcmp ref.vcf var.vcf
+Usage: vcfcmp ref.vcf var1.vcf var2.vcf ...
  e.g.: vcfcmp WT.vcf MU.vcf
 ```
 
