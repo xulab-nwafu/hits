@@ -1,6 +1,6 @@
 About
 -----
-The `hits` is an integrated pipeline for DNA resequencing and RNAseq analyses in Xu Lab. It is designed for molecuar biologist with limited bioinformatics skills. Experts can use it but please note that some of the parameters were build-in, your are awared.
+The `hits` is an integrated pipeline for DNA resequencing and RNAseq analyses in Xu Lab. It is designed for molecular biologists with limited bioinformatics skills. Experts can use it but please note that some of the parameters are built-in, you are your are warned here.
 
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
@@ -61,13 +61,13 @@ Usage: rnadiff rnaseq.conf rnaseq.tsv control_tag case_tag
 ```
 - To perform Gene Ontology enrichment analysis, use `goea` (will make public soon)
 ```
-Usage: /home/xulab/bin/goea gene_id.txt
- e.g.: /home/xulab/bin/goea de.up.txt
+Usage: goea gene_id.txt
+ e.g.: goea de.up.txt
 ```
 
 Note
 -----
-Please note that `dnaseq`, `vcfcmp`, `rnaseq`, and `goea` can only used for _Fusuarium graminearum_ directly.  Other species need to change a bit of source codes.  `rnadiff` could be applied for any species, if you like.
+Please note that `dnaseq`, `vcfcmp`, `rnaseq`, and `goea` can only use for _Fusuarium graminearum_ directly.  Other species need to change a few of source codes.  `rnadiff` could be applied to any species, if you like.
 
 Dependence
 ----------
