@@ -59,7 +59,7 @@ Usage: rnaseq fastq_directory
 Usage: rnadiff rnaseq.conf rnaseq.tsv control_tag case_tag
  e.g.: rnadiff demo/rnaseq.conf demo/rnaseq.tsv wt mu
 ```
-- To perform Gene Ontology enrichment analysis, use `goea` (will make public soon)
+- To perform Gene Ontology enrichment analysis, use `goea` in https://github.com/xulab-nwafu/seqmate/tree/master/misc
 ```
 Usage: goea gene_id.txt
  e.g.: goea de.up.txt
