@@ -5,7 +5,7 @@ The `hits` is an integrated pipeline for DNA resequencing and RNAseq analyses in
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
-hits 0.4.2
+hits 0.4.3
 
 Usage:
 
@@ -94,7 +94,7 @@ Qinhu Wang (wangqinhu@nwafu.edu.cn)
 
 Copyright
 ---------
-2016-2017 (c) Xu Lab, Northwest A&F University
+2016-2018 (c) Xu Lab, Northwest A&F University
 
 License
 -------

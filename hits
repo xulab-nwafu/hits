@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.4.2';
+my $version = '0.4.3';
 my %options = ();
 
 init();
@@ -70,10 +70,6 @@ sub dnaseq {
 		print STDERR "Calling variants ...\n";
 		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy 1 -cv -O v - > $dir/vcf/$fq.vcf";
 		system($callvar_cmd);
-		my $callsnp_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy 1 -cv -V indels -O v - > $dir/vcf/$fq.snps.vcf";
-		system($callsnp_cmd);
-		my $callindel_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy 1 -cv -V snps -O v - > $dir/vcf/$fq.indels.vcf";
-		system($callindel_cmd);
 	}
 
 	print STDERR "Done\n\n";
