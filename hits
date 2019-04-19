@@ -42,6 +42,7 @@ sub dnaseq {
 
 	print STDERR "Parsing fastq file(s) in $options{'d'}\n";
 	my $fqs = find_fastq($options{'d'});
+	my $ploidy = $options{'n'};
 	my $num = keys %{$fqs};
 	print STDERR "Total $num pairs of fastq file(s) found.\n";
 
@@ -68,7 +69,7 @@ sub dnaseq {
 		system("samtools index $dir/bam/$fq.bam");
 
 		print STDERR "Calling variants ...\n";
-		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy 1 -cv -O v - > $dir/vcf/$fq.vcf";
+		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy $ploidy -cv -O v - > $dir/vcf/$fq.vcf";
 		system($callvar_cmd);
 	}
 
@@ -231,7 +232,7 @@ sub init {
 	}
 
 	# Options
-	getopts("p:d:g:a:s:o:t:hv", \%options) or die "$!\n" . usage();
+	getopts("p:d:g:n:a:s:o:t:hv", \%options) or die "$!\n" . usage();
 
 	# Check help
 	if ($options{'h'}) {
@@ -271,6 +272,10 @@ sub init {
 	if (uc($options{'p'}) eq 'D') {
 		if ( defined($options{'a'}) ) {
 			print STDERR "Warning: unused option \"-a\" was set as \"$options{'a'}\", ignored.\n";
+		}
+		unless ( defined($options{'n'}) ) {
+			print STDERR "Warning: no ploidy specified! set to 1.\n";
+			$options{'n'} = 1;
 		}
 	}
 
@@ -329,6 +334,7 @@ Usage:
     -p  pipeline for DNAseq [D] or RNAseq [R] analysis
     -d  directory that containing FASTQ file(s), .fq/.fastq(.gz)
     -g  reference genome
+    -n  set ploidy [default 1, work with -p D]
     -a  annotation file in GTF format [work with -p R]
     -s  strand-specific information [work with -p R]
         1 - stranded [default]
