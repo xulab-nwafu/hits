@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.4.3';
+my $version = '0.9.0';
 my %options = ();
 
 init();
@@ -66,10 +66,11 @@ sub dnaseq {
 		my $sam2bam_cmd = "samtools view -bS -";
 		my $sortbam_cmd = "samtools sort -o $dir/bam/$fq.bam -";
 		system("$map_cmd | $sam2bam_cmd | $sortbam_cmd");
-		system("samtools index $dir/bam/$fq.bam");
+		system("java -jar ~/sf/picard/picard-2.jar MarkDuplicates I=$dir/bam/$fq.bam O=$dir/bam/$fq.nodup.bam M=$dir/bam/$fq.marked_dup_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true");
+		system("samtools index $dir/bam/$fq.nodup.bam");
 
 		print STDERR "Calling variants ...\n";
-		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.bam | bcftools call --ploidy $ploidy -cv -O v - > $dir/vcf/$fq.vcf";
+		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.nodup.bam | bcftools call --ploidy $ploidy -cv -O v - > $dir/vcf/$fq.vcf";
 		system($callvar_cmd);
 	}
 
@@ -110,7 +111,7 @@ sub rnaseq {
 	}
 	foreach my $fq (sort keys %{$fqs}) {
 		print STDERR "Mapping $fq ...\n";
-		my $hisat2_options = $rnaseq_strand_option .  "--min-intronlen 20 --max-intronlen 4000 --no-unal --no-temp-splicesite " .
+		my $hisat2_options = $rnaseq_strand_option .  "--max-intronlen $options{'i'} --no-unal --no-temp-splicesite " .
 		"--novel-splicesite-outfile $dir/bam/$fq.splicesite --novel-splicesite-infile $dir/bam/$fq.splicesite";
 		my $map_cmd = "hisat2 -p $options{'t'} $hisat2_options -x " . $options{'g'} .
 			' -1 ' . $fqs->{$fq}->{'1'} .
@@ -232,7 +233,7 @@ sub init {
 	}
 
 	# Options
-	getopts("p:d:g:n:a:s:o:t:hv", \%options) or die "$!\n" . usage();
+	getopts("p:d:g:n:a:s:i:o:t:hv", \%options) or die "$!\n" . usage();
 
 	# Check help
 	if ($options{'h'}) {
@@ -297,6 +298,10 @@ sub init {
 				usage();
 			}
 		}
+		unless ( defined($options{'i'}) ) {
+			print STDERR "No max intronlen specified, set to defualt 4000 bp\n";
+			$options{'i'} = 4000;
+		}
 	}
 
 
@@ -339,6 +344,7 @@ Usage:
     -s  strand-specific information [work with -p R]
         1 - stranded [default]
         0 - unstranded
+    -i  max intron length [work with -p R, default 4000 bp]
     -o  output directory
     -t  number of alignment threads
     -h  help
