@@ -100,7 +100,7 @@ sub rnaseq {
 	print STDERR "Creating output directory: $options{'o'}\n";
 	my $dir = create_directory($options{'o'});
 
-	unless (-e $options{'g'} . ".1.ht2") {
+	unless (-e $options{'g'} . ".1.ht2" or -e $options{'g'} . ".1.ht2l") {
 		build_db('hisat2-build', $options{'g'}, $dir);
 	}
 
