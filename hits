@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# 
+#
 # HIgh-Throughput Sequencing (hits) pipeline in Xu Lab
 # Author: Qinhu Wang (wangqinhu@nwafu.edu.cn)
 # Copyright (c) Xu Lab, Northwest A&F University
@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.10.0';
+my $version = '0.11.0';
 my %options = ();
 
 init();
@@ -26,6 +26,9 @@ sub hits {
 	}
 	if (uc($options{'p'}) eq 'R') {
 		rnaseq();
+	}
+	if (uc($options{'p'}) eq 'L') {
+		lift_dnaseq();
 	}
 
 	exit;
@@ -71,6 +74,56 @@ sub dnaseq {
 
 		print STDERR "Calling variants ...\n";
 		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.nodup.bam | bcftools call --ploidy $ploidy -cv -O v - > $dir/vcf/$fq.vcf";
+		system($callvar_cmd);
+	}
+
+	print STDERR "Done\n\n";
+
+	return;
+
+}
+
+# Lift DNAseq pipeline
+sub lift_dnaseq {
+
+	check_app("bowtie2-build");
+	check_app("bowtie2");
+	check_app("samtools");
+	check_app("bcftools");
+	check_app("leviosam");
+
+	print STDERR "Parsing fastq file(s) in $options{'d'}\n";
+	my $fqs = find_fastq($options{'d'});
+	my $ploidy = $options{'n'};
+	my $num = keys %{$fqs};
+	print STDERR "Total $num pairs of fastq file(s) found.\n";
+
+	if ($num < 1) {
+		die "Aborted: No fastq files found!\n";
+	}
+
+	print STDERR "Creating output directory: $options{'o'}\n";
+	my $dir = create_directory($options{'o'});
+
+	unless (-e $options{'c'} . ".1.bt2") {
+		build_db('bowtie2-build', $options{'c'}, $dir);
+	}
+
+	print STDERR "Runing Lift/DNAseq pipeline\n";
+	foreach my $fq (sort keys %{$fqs}) {
+		print STDERR "Mapping $fq ...\n";
+		my $map_cmd = "bowtie2 -p $options{'t'} -x " . $options{'c'} .
+			' -1 ' . $fqs->{$fq}->{'1'} .
+			' -2 ' . $fqs->{$fq}->{'2'};
+		my $lifover_cmd = "leviosam lift -l $options{'l'} -t $options{'t'} -f $options{'g'} -m";
+		my $sam2bam_cmd = "samtools view -bS -";
+		my $sortbam_cmd = "samtools sort -o $dir/bam/$fq.lift.bam -";
+		system("$map_cmd | $lifover_cmd | $sam2bam_cmd | $sortbam_cmd");
+		system("java -jar ~/sf/picard/picard-2.jar MarkDuplicates I=$dir/bam/$fq.lift.bam O=$dir/bam/$fq.lift.nodup.bam M=$dir/bam/$fq.marked_dup_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true");
+		system("samtools index $dir/bam/$fq.lift.nodup.bam");
+
+		print STDERR "Calling variants ...\n";
+		my $callvar_cmd = "samtools mpileup -uf $options{'g'} $dir/bam/$fq.lift.nodup.bam | bcftools call --ploidy $ploidy -cv -O v - > $dir/vcf/$fq.vcf";
 		system($callvar_cmd);
 	}
 
@@ -210,7 +263,7 @@ sub create_directory {
 	my $dir = shift;
 
 	$dir =~ s/\/$//;
-	
+
 	if (uc($options{'p'}) eq 'D') {
 		system("mkdir -p $dir/bam");
 		system("mkdir -p $dir/vcf");
@@ -219,7 +272,10 @@ sub create_directory {
 		system("mkdir -p $dir/bam");
 		system("mkdir -p $dir/featureCounts");
 	}
-
+	if (uc($options{'p'}) eq 'L') {
+		system("mkdir -p $dir/bam");
+		system("mkdir -p $dir/vcf");
+	}
 	return $dir;
 
 }
@@ -233,7 +289,7 @@ sub init {
 	}
 
 	# Options
-	getopts("p:d:g:n:a:s:i:o:t:hv", \%options) or die "$!\n" . usage();
+	getopts("p:d:g:c:l:n:a:s:i:o:t:hv", \%options) or die "$!\n" . usage();
 
 	# Check help
 	if ($options{'h'}) {
@@ -250,7 +306,7 @@ sub init {
 		print STDERR "Aborted: No pipeline specified!\n";
 		usage();
 	}
-	unless ( (uc($options{'p'}) eq 'D') or (uc($options{'p'}) eq 'R') ) {
+	unless ( (uc($options{'p'}) eq 'D') or (uc($options{'p'}) eq 'R') or (uc($options{'p'}) eq 'L') ) {
 		print STDERR "Aborted: Unknown pipeline selected!\n";
 		usage();
 	}
@@ -277,6 +333,25 @@ sub init {
 		unless ( defined($options{'n'}) ) {
 			print STDERR "Warning: no ploidy specified! set to 1.\n";
 			$options{'n'} = 1;
+		}
+	}
+
+	# In Lift/DNAseq
+	if (uc($options{'p'}) eq 'L') {
+		if ( defined($options{'a'}) ) {
+			print STDERR "Warning: unused option \"-a\" was set as \"$options{'a'}\", ignored.\n";
+		}
+		unless ( defined($options{'n'}) ) {
+			print STDERR "Warning: no ploidy specified! set to 1.\n";
+			$options{'n'} = 1;
+		}
+		unless (defined($options{'c'})) {
+			print STDERR "Aborted: No consensus genome specified!\n";
+			usage();
+		}
+		unless (defined($options{'l'})) {
+			print STDERR "Aborted: No leviosam lift index file specified!\n";
+			usage();
 		}
 	}
 
@@ -338,7 +413,9 @@ Usage:
 
     -p  pipeline for DNAseq [D] or RNAseq [R] analysis
     -d  directory that containing FASTQ file(s), .fq/.fastq(.gz)
-    -g  reference genome
+    -g  reference genome file
+    -c  consensus genome file
+    -l  leviosam lift index file
     -n  set ploidy [default 1, work with -p D]
     -a  annotation file in GTF format [work with -p R]
     -s  strand-specific information [work with -p R]

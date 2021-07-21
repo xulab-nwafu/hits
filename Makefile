@@ -3,11 +3,11 @@ prefix=/home/xulab/sf/hits/current
 all:
 	mkdir -p bin
 	mkdir -p doc
-	cp hits dnaseq* rnaseq* bin/
+	cp hits dnaseq* rnaseq* lift.dnaseq* bin/
 	cp README.md doc/
 	chmod 755 bin/*
 	chmod 644 doc/*
-install: hits dnaseq rnaseq dnaseq.ss rnaseq.ss
+install: hits dnaseq rnaseq lift.dnaseq.fgpb
 	mkdir -p $(prefix)/bin
 	mkdir -p $(prefix)/doc
 	install -p -m 0755 bin/* $(prefix)/bin/
