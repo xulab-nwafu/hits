@@ -26,8 +26,8 @@ fi
 dir_name=`dirname $1`
 base_name=`basename $1`
 ref_genome='/home/xulab/db/Fusarium_graminearum/nwafu_pacbio_v1/FG.PB.genome.fa'
-alt_genome='/home/xulab/db/Fusarium_graminearum/PH1.KSU1626/PH1.KSU1626.fa'
-lev_index='/home/xulab/db/Fusarium_graminearum/PH1.KSU1626/PH1.KSU1626.lft'
+alt_genome='/home/xulab/db/Fusarium_graminearum/PH1.KSU1626/PH1.KSU1626.no_overlap.fa'
+lev_index='/home/xulab/db/Fusarium_graminearum/PH1.KSU1626/PH1.KSU1626.no_overlap.lft'
 
 nohup hits -p L -g $ref_genome -c $alt_genome -l $lev_index -d $1 -o $dir_name/$base_name.lift.outdir -t 8 1>$dir_name/$base_name.lift_dnaseq_log.txt 2>&1 &
 echo "Job submitted, outputs will be in $dir_name/$base_name.lift.outdir"

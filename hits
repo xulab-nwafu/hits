@@ -115,7 +115,7 @@ sub lift_dnaseq {
 		my $map_cmd = "bowtie2 -p $options{'t'} -x " . $options{'c'} .
 			' -1 ' . $fqs->{$fq}->{'1'} .
 			' -2 ' . $fqs->{$fq}->{'2'};
-		my $lifover_cmd = "leviosam lift -l $options{'l'} -t $options{'t'} -f $options{'g'} -m";
+		my $lifover_cmd = "leviosam lift -l $options{'l'} -t $options{'t'}";
 		my $sam2bam_cmd = "samtools view -bS -";
 		my $sortbam_cmd = "samtools sort -o $dir/bam/$fq.lift.bam -";
 		system("$map_cmd | $lifover_cmd | $sam2bam_cmd | $sortbam_cmd");
