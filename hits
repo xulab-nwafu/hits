@@ -70,6 +70,7 @@ sub dnaseq {
 		my $sortbam_cmd = "samtools sort -o $dir/bam/$fq.bam -";
 		system("$map_cmd | $sam2bam_cmd | $sortbam_cmd");
 		system("java -jar ~/sf/picard/picard-2.jar MarkDuplicates I=$dir/bam/$fq.bam O=$dir/bam/$fq.nodup.bam M=$dir/bam/$fq.marked_dup_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true");
+		system("rm -rf $dir/bam/$fq.bam");
 		system("samtools index $dir/bam/$fq.nodup.bam");
 
 		print STDERR "Calling variants ...\n";
@@ -120,6 +121,7 @@ sub lift_dnaseq {
 		my $sortbam_cmd = "samtools sort -o $dir/bam/$fq.lift.bam -";
 		system("$map_cmd | $lifover_cmd | $sam2bam_cmd | $sortbam_cmd");
 		system("java -jar ~/sf/picard/picard-2.jar MarkDuplicates I=$dir/bam/$fq.lift.bam O=$dir/bam/$fq.lift.nodup.bam M=$dir/bam/$fq.marked_dup_metrics.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true");
+		system("rm -rf $dir/bam/$fq.lift.bam");
 		system("samtools index $dir/bam/$fq.lift.nodup.bam");
 
 		print STDERR "Calling variants ...\n";
