@@ -26,5 +26,5 @@ fi
 dir_name=`dirname $1`
 base_name=`basename $1`
 
-nohup hits -p D -g ~/db/Fusarium_graminearum/fgbase_v1/bowtie2/genome.fa -d $1 -o $dir_name/$base_name.outdir -t 8 1>$dir_name/$base_name.dnaseq_log.txt 2>&1 &
+nohup hits -p D -g ~/db/Fusarium_graminearum/ensembl_release_32/bowtie2/FG.RR.*.genome.fa -d $1 -o $dir_name/$base_name.outdir -t 8 1>$dir_name/$base_name.dnaseq_log.txt 2>&1 &
 echo "Job submitted, outputs will be in $dir_name/$base_name.outdir"

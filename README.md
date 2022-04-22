@@ -5,7 +5,7 @@ The `hits` is an integrated pipeline for DNA resequencing and RNAseq analyses in
 HIgh-Throughput Sequencing (hits) pipeline
 ------------------------------------------
 ```
-hits 0.4.3
+hits 0.12.0
 
 Usage:
 
@@ -13,11 +13,15 @@ Usage:
 
     -p  pipeline for DNAseq [D] or RNAseq [R] analysis
     -d  directory that containing FASTQ file(s), .fq/.fastq(.gz)
-    -g  reference genome
+    -g  reference genome file
+    -c  consensus genome file
+    -l  leviosam lift index file
+    -n  set ploidy [default 1, work with -p D]
     -a  annotation file in GTF format [work with -p R]
     -s  strand-specific information [work with -p R]
         1 - stranded [default]
         0 - unstranded
+    -i  max intron length [work with -p R, default 4000 bp]
     -o  output directory
     -t  number of alignment threads
     -h  help
@@ -82,11 +86,7 @@ Dependence
 - R
 - filter_vcf
 - rnadiff
-
-Sclerotinia sclerotiorum
-------------------------
-- For _Sclerotinia sclerotiorum_, use `dnaseq.ss`, `vcfcmp.ss`, `rnaseq.ss`, and `goea.ss`, please.
-- rnadiff have no genome file specified, can be used directly.
+- leviosam
 
 Author
 ------
@@ -94,7 +94,7 @@ Qinhu Wang (wangqinhu@nwafu.edu.cn)
 
 Copyright
 ---------
-2016-2018 (c) Xu Lab, Northwest A&F University
+2016-2022 (c) Xu Lab, Northwest A&F University
 
 License
 -------

@@ -7,18 +7,18 @@
 
 if [ $# != 1 ] ; then
 	echo "Usage: $0 fastq_directory" 
-	echo " e.g.: $0 ~/data/example/dnaseq/fastq"
+	echo " e.g.: $0 ~/data/example/rnaseq/fastq"
 	exit 1
 fi
 
 if [ $1 == "-h" ] ; then
-    echo "dnaseq using hits"
+    echo "rnaseq using hits"
     hits -h
     exit 1
 fi
 
 if [ $1 == "-v" ] ; then
-    echo "dnaseq using hits"
+    echo "rnaseq using hits"
     hits -v
     exit 1
 fi
@@ -26,5 +26,5 @@ fi
 dir_name=`dirname $1`
 base_name=`basename $1`
 
-nohup hits -p D -g ~/db/Fusarium_graminearum/fgbase_v1/bowtie2/genome.fa -d $1 -o $dir_name/$base_name.outdir -t 8 1>$dir_name/$base_name.dnaseq_log.txt 2>&1 &
+nohup hits -p R -g ~/db/Fusarium_graminearum/ensembl_release_32/hisat2/FG.RR.*.genome.fa -a ~/db/Fusarium_graminearum/ensembl_release_32/FG.RR.*.gene.gtf -s 1 -d $1 -o $dir_name/$base_name.outdir -t 8 1>$dir_name/$base_name.rnaseq_log.txt 2>&1 &
 echo "Job submitted, outputs will be in $dir_name/$base_name.outdir"
