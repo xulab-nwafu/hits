@@ -10,7 +10,7 @@ use warnings;
 use Getopt::Std;
 
 my $appname = 'hits';
-my $version = '0.12.0';
+my $version = '0.13.0';
 my %options = ();
 
 init();
@@ -142,6 +142,7 @@ sub rnaseq {
 	check_app("hisat2");
 	check_app("samtools");
 	check_app("featureCounts");
+	check_app("qualimap");
 
 	print STDERR "Parsing fastq file(s) in $options{'d'}\n";
 	my $fqs = find_fastq($options{'d'});
@@ -160,13 +161,15 @@ sub rnaseq {
 	}
 
 	print STDERR "Runing RNAseq pipeline\n";
-	my $rnaseq_strand_option = '';
+	my $rnaseq_strand_option_hisat2 = '';
+	my $rnaseq_strand_option_qualimap = 'non-strand-specific';
 	if ($options{'s'} == 1) {
-		$rnaseq_strand_option = '--rna-strandness RF ';
+		$rnaseq_strand_option_hisat2 = '--rna-strandness RF ';
+		$rnaseq_strand_option_qualimap = 'strand-specific-reverse';
 	}
 	foreach my $fq (sort keys %{$fqs}) {
 		print STDERR "Mapping $fq ...\n";
-		my $hisat2_options = $rnaseq_strand_option .  "--max-intronlen $options{'i'} --no-unal --no-temp-splicesite " .
+		my $hisat2_options = $rnaseq_strand_option_hisat2 .  "--max-intronlen $options{'i'} --no-unal --no-temp-splicesite " .
 		"--novel-splicesite-outfile $dir/bam/$fq.splicesite --novel-splicesite-infile $dir/bam/$fq.splicesite";
 		my $map_cmd = "hisat2 -p $options{'t'} $hisat2_options -x " . $options{'g'} .
 			' -1 ' . $fqs->{$fq}->{'1'} .
@@ -175,6 +178,13 @@ sub rnaseq {
 		my $sortbam_cmd = "samtools sort -o $dir/bam/$fq.bam -";
 		system("$map_cmd | $sam2bam_cmd | $sortbam_cmd");
 		system("samtools index $dir/bam/$fq.bam");
+	}
+
+	print STDERR "\n\nEvaluating RNA-seq quanlity via QualiMap ...\n\n";
+	foreach my $fq (sort keys %{$fqs}) {
+		my $qualimap_cmd = "qualimap rnaseq --java-mem-size=2G -pe -p $rnaseq_strand_option_qualimap -gtf $options{'a'} -bam $dir/bam/$fq.bam -s -outdir $dir/qualimap -outformat pdf -outfile $fq.pdf";
+		system($qualimap_cmd);
+		system("mv $dir/qualimap/rnaseq_qc_results.txt $dir/qualimap/$fq.txt");
 	}
 
 	print STDERR "Counting features ...\n";
